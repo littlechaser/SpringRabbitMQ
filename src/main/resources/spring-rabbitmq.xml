@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.7.xsd">
+
+	<!-- 连接工厂的配置 -->
+	<rabbit:connection-factory id="connectionFactory"
+		host="${rabbitmq.host}" 
+		port="${rabbitmq.port}" 
+		virtual-host="${rabbitmq.vhost}"
+		username="${rabbitmq.username}"
+		password="${rabbitmq.password}" />
+	
+	<rabbit:admin connection-factory="connectionFactory"/>
+	<!-- 指定名称为boys的列队 -->	
+	<rabbit:queue name="boys" durable="false" exclusive="false" auto-delete="true"/>
+	<!-- 指定名称为boys的列队 -->
+	<rabbit:queue name="girls" durable="false" exclusive="false" auto-delete="true"/>
+	<!-- 指定名称为boys的列队 -->
+	<rabbit:queue name="love" durable="false" exclusive="false" auto-delete="true"/>
+	
+	<rabbit:topic-exchange name="topicExchange">
+		<rabbit:bindings>
+			<!-- routing key为“boys.*.*”形式的 消息发送到boys列队-->
+			<rabbit:binding queue="boys" pattern="boys.*.*"></rabbit:binding>
+			<!-- routing key为“*.*.girls”形式的 消息发送到girls列队-->
+			<rabbit:binding queue="girls" pattern="*.*.girls"></rabbit:binding>
+			<!-- routing key为“*.love.*”形式的 消息发送到love列队-->
+			<rabbit:binding queue="love" pattern="*.love.*"></rabbit:binding>
+		</rabbit:bindings>
+	</rabbit:topic-exchange>
+	
+	<!-- 定义操作模板，还可用 message-converter属性指定消息转换器，此处不配置，spring会给我们使用默认的转换器把消息转换成message对象 -->
+	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory" exchange="topicExchange"/>
+	
+	
+	<!-- 消费者1 -->
+	<bean id="consumer" class="com.learn.rabbitmq.listener.Consumer"/>
+	<!-- 消费者2 -->
+	<bean id="consumer2" class="com.learn.rabbitmq.listener.Consumer2"/>
+	<!-- 消费者3 -->
+	<bean id="consumer3" class="com.learn.rabbitmq.listener.Consumer3"/>
+	
+	<rabbit:listener-container connection-factory="connectionFactory">
+		<!-- 消费者1从boys列队拿消息 -->
+		<rabbit:listener queues="boys" ref="consumer" />
+		<!-- 消费者2从girls列队拿消息 -->
+		<rabbit:listener queues="girls" ref="consumer2" />
+		<!-- 消费者3从love列队拿消息 -->
+		<rabbit:listener queues="love" ref="consumer3" />
+	</rabbit:listener-container>
+</beans>
