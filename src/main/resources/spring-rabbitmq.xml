@@ -12,6 +12,7 @@
 		username="${rabbitmq.username}"
 		password="${rabbitmq.password}" />
 	
+	<!-- 使用admin在容器启动时，自动获取exchange和queue，并且注册到rabbitmq服务器中 -->
 	<rabbit:admin connection-factory="connectionFactory"/>
 	<!-- 指定名称为boys的列队 -->	
 	<rabbit:queue name="boys" durable="false" exclusive="false" auto-delete="true"/>
