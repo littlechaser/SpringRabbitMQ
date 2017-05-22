@@ -32,6 +32,8 @@
 		</rabbit:bindings>
 	</rabbit:topic-exchange>
 	
+<!-- 	<bean id="messageConverter" class="org.springframework.messaging.converter.MappingJackson2MessageConverter"/> -->
+	
 	<!-- 定义操作模板，还可用 message-converter属性指定消息转换器，此处不配置，spring会给我们使用默认的转换器把消息转换成message对象 -->
 	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory" exchange="topicExchange"/>
 	
