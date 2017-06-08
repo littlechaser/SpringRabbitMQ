@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:p="http://www.springframework.org/schema/p"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xmlns:context="http://www.springframework.org/schema/context"
 	   xmlns:mvc="http://www.springframework.org/schema/mvc"
@@ -13,9 +12,13 @@
     http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
 
 	<!-- 扫描controller（controller层注入） -->
-	<context:component-scan base-package="com.learn.rabbitmq.**.controller">
+	<context:component-scan base-package="com.learn.rabbitmq">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
-	
-	<mvc:annotation-driven />
+
+	<!-- swagger的Controller注册 -->
+	<bean class="com.learn.rabbitmq.core.ApplicationSwaggerConfig"/>
+
+	<mvc:annotation-driven/>
+	<mvc:resources mapping="/swagger/**" location="/WEB-INF/swagger/"/>
 </beans>
