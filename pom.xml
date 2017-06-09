@@ -60,6 +60,12 @@
             <artifactId>springfox-swagger2</artifactId>
             <version>2.6.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>RELEASE</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>SpringRabbitMQ</finalName>
